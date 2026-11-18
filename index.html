@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI-Kit & Design System — ЗВУК // СИНТЕЗ 2026</title>
+    <style>
+        /* =========================================================
+           1. ДИЗАЙН-ТОКЕНЫ (DESIGN TOKENS) — ЗВУК // СИНТЕЗ 2026
+           ========================================================= */
+        :root {
+            /* Цветовая палитра (Color Tokens) */
+            --bg-main: #060608;
+            --bg-surface: #0D0D12;
+            --bg-card: #101015;
+            --bg-card-hover: #181822;
+            --bg-glass: rgba(6, 6, 8, 0.78);
+
+            --accent-lime: #CCFF00;
+            --accent-lime-dim: rgba(204, 255, 0, 0.14);
+            --accent-purple: #7B2CBF;
+            --accent-purple-dim: rgba(123, 44, 191, 0.22);
+            --accent-cyan: #00F5D4;
+            --accent-coral: #FF6B6B;
+
+            --text-main: #F4F4F6;
+            --text-muted: #8E8E9E;
+            --text-dark: #060608;
+
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-default: rgba(255, 255, 255, 0.14);
+            --border-strong: rgba(255, 255, 255, 0.3);
+
+            /* Типографика (Системные и геометрические фоллбэки без внешних зависимостей) */
+            --font-display: 'Unbounded', 'Arial Black', 'Impact', system-ui, sans-serif;
+            --font-body: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+            /* Сетка и отступы (Spacing & Layout) */
+            --container-max: 1680px;
+            --space-xs: 0.5rem;   /* 8px */
+            --space-sm: 1rem;     /* 16px */
+            --space-md: 1.5rem;   /* 24px */
+            --space-lg: 2.5rem;   /* 40px */
+            --space-xl: 4rem;     /* 64px */
+
+            /* Скругления (Border Radius) */
+            --radius-sm: 12px;
+            --radius-md: 18px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-pill: 9999px;
+
+            /* Тени и свечения (Elevation & Glows) */
+            --glow-lime: 0 12px 32px rgba(204, 255, 0, 0.25);
+            --glow-cyan: 0 12px 32px rgba(0, 245, 212, 0.2);
+            --shadow-card: 0 20px 40px rgba(0, 0, 0, 0.55);
+
+            /* Анимации (Motion) */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: all 0.2s var(--ease-out-expo);
+            --transition-base: all 0.35s var(--ease-out-expo);
+        }
+
+        /* =========================================================
+           2. БАЗОВЫЕ СТИЛИ И КАРКАС ДОКУМЕНТАЦИИ
+           ========================================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: var(--font-body);
+        }
+
+        body {
+            line-height: 1.55;
+            background-image:
+                radial-gradient(circle at 12% 8%, rgba(123, 44, 191, 0.14) 0%, transparent 38%),
+                radial-gradient(circle at 88% 45%, rgba(204, 255, 0, 0.06) 0%, transparent 42%);
+        }
+
+        .ds-wrapper {
+            display: grid;
+            grid-template-columns: 290px 1fr;
+            min-height: 100vh;
+            max-width: 1840px;
+            margin: 0 auto;
+        }
+
+        /* Боковая навигация UI-Kit */
+        .ds-sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            background: var(--bg-surface);
+            border-right: 1px solid var(--border-default);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .ds-brand {
+            font-family: var(--font-display);
+            font-weight: 900;
+            font-size: 1.15rem;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.4rem;
+        }
+
+        .ds-brand span {
+            color: var(--accent-lime);
+        }
+
+        .ds-version {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-lime);
+            background: var(--accent-lime-dim);
+            padding: 0.25rem 0.65rem;
+            border-radius: var(--radius-pill);
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .ds-nav-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .ds-nav-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 0.65rem;
+            padding-left: 0.75rem;
+        }
+
+        .ds-nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .ds-nav-list a {
+            display: block;
+            padding: 0.55rem 0.75rem;
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition-fast);
+        }
+
+        .ds-nav-list a:hover, .ds-nav-list a.active {
+            background: var(--bg-card-hover);
+            color: var(--accent-lime);
+        }
+
+        /* Основной контент UI-Kit */
+        .ds-main {
+            padding: 3rem clamp(1.5rem, 4vw, 4rem) 6rem;
+            min-width: 0;
+        }
+
+        .ds-hero {
+            padding-bottom: 3rem;
+            border-bottom: 1px solid var(--border-default);
+            margin-bottom: 4rem;
+        }
+
+        .ds-hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 4.5vw, 4.2rem);
+            font-weight: 900;
+            line-height: 1.05;
+            text-transform: uppercase;
+            margin: 1rem 0 1.25rem;
+        }
+
+        .ds-hero p {
+            color: var(--text-muted);
+            max-width: 760px;
+            font-size: 1.1rem;
+        }
+
+        .ds-section {
+            margin-bottom: 5.5rem;
+            scroll-margin-top: 2rem;
+        }
+
+        .ds-sec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--border-default);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .ds-sec-num {
+            font-family: var(--font-mono);
+            color: var(--accent-lime);
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+
+        .ds-sec-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .ds-sub-title {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin: 2.25rem 0 1rem;
+            letter-spacing: 0.04em;
+        }
+
+        /* Витринные контейнеры */
+        .showcase-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-snippet {
+            background: #040406;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.25rem;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: #A6ACCD;
+            overflow-x: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .copy-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            color: var(--text-main);
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: var(--transition-fast);
+        }
+
+        .copy-btn:hover {
+            border-color: var(--accent-lime);
+            color: var(--accent-lime);
+        }
+
+        /* =========================================================
+           3. СЕКЦИЯ 01: ЦВЕТА (COLOR SWATCHES)
+           ========================================================= */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .color-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .color-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-lime);
+        }
+
+        .color-swatch {
+            height: 110px;
+            width: 100%;
+            position: relative;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .color-info {
+            padding: 1rem;
+        }
+
+        .color-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .color-meta {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* =========================================================
+           4. СЕКЦИЯ 02: ТИПОГРАФИКА (TYPOGRAPHY SCALE)
+           ========================================================= */
+        .type-row {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 1.5rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+            align-items: center;
+        }
+
+        .type-row:last-child {
+            border-bottom: none;
+        }
+
+        .type-specs {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .type-specs strong {
+            color: var(--accent-lime);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* =========================================================
+           5. СЕКЦИЯ 03: СЕТКА, ОТСТУПЫ И СКРУГЛЕНИЯ
+           ========================================================= */
+        .spacing-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .spacing-item {
+            display: grid;
+            grid-template-columns: 180px 100px 1fr;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .spacing-bar {
+            height: 22px;
+            background: linear-gradient(90deg, var(--accent-lime), var(--accent-cyan));
+            border-radius: 6px;
+        }
+
+        .radius-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .radius-card {
+            background: var(--bg-card);
+            border: 1px dashed var(--accent-lime);
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* =========================================================
+           6. СЕКЦИЯ 04: КНОПКИ И ИНТЕРАКТИВНЫЕ ЭЛЕМЕНТЫ
+           ========================================================= */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            padding: 1rem 2rem;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            transition: var(--transition-base);
+            border: 1px solid transparent;
+        }
+
+        .btn-sm {
+            padding: 0.65rem 1.35rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-lime);
+            color: var(--text-dark);
+        }
+
+        .btn-primary:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: var(--glow-lime);
+        }
+
+        .btn-secondary {
+            background: var(--accent-purple);
+            color: #ffffff;
+        }
+
+        .btn-secondary:hover {
+            background: #9333EA;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-main);
+            border-color: var(--border-default);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-lime);
+            color: var(--accent-lime);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-main);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        .btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Бейджи и теги */
+        .tag-pill {
+            font-family: var(--font-display);
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.4rem 0.95rem;
+            border-radius: var(--radius-pill);
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tag-lime { background: var(--accent-lime); color: var(--text-dark); }
+        .tag-outline { border: 1px solid var(--accent-lime); color: var(--accent-lime); }
+        .tag-purple { background: var(--accent-purple-dim); border: 1px solid var(--accent-purple); color: #E0AAFF; }
+        .tag-cyan { background: rgba(0, 245, 212, 0.15); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); }
+
+        /* =========================================================
+           7. СЕКЦИЯ 05: ФОРМЫ, ИНПУТЫ И КОНТРОЛЫ
+           ========================================================= */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .ui-field label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.45rem;
+            font-weight: 600;
+        }
+
+        .ui-input {
+            width: 100%;
+            padding: 0.95rem 1.2rem;
+            background: var(--bg-main);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-sm);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: var(--transition-fast);
+        }
+
+        .ui-input:focus {
+            outline: none;
+            border-color: var(--accent-lime);
+            box-shadow: 0 0 0 3px rgba(204, 255, 0, 0.15);
+        }
+
+        .ui-input.error {
+            border-color: var(--accent-coral);
+        }
+
+        .field-hint {
+            font-size: 0.78rem;
+            margin-top: 0.35rem;
+            color: var(--text-muted);
+        }
+
+        .field-hint.error {
+            color: var(--accent-coral);
+        }
+
+        /* Переключатели и чекбоксы */
+        .toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .ui-switch {
+            width: 48px;
+            height: 26px;
+            background: var(--bg-main);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-pill);
+            position: relative;
+            transition: var(--transition-fast);
+        }
+
+        .ui-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: var(--transition-fast);
+        }
+
+        input:checked + .ui-switch {
+            background: var(--accent-lime);
+            border-color: var(--accent-lime);
+        }
+
+        input:checked + .ui-switch::after {
+            transform: translateX(22px);
+            background: var(--text-dark);
+        }
+
+        /* =========================================================
+           8. СЕКЦИЯ 06: ДОМЕННЫЕ КОМПОНЕНТЫ ФЕСТИВАЛЯ
+           ========================================================= */
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Карточка номинанта (без внешних картинок, с генеративным градиентом) */
+        .artist-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: var(--transition-base);
+        }
+
+        .artist-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent-lime);
+        }
+
+        .artist-cover {
+            height: 190px;
+            background: linear-gradient(135deg, #1E1035 0%, #091E24 55%, #1D2605 100%);
+            position: relative;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .artist-cover::after {
+            content: 'SYNTHESIS // 26';
+            font-family: var(--font-display);
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.05);
+            position: absolute;
+            right: -10px;
+            bottom: 10px;
+            pointer-events: none;
+        }
+
+        .artist-body {
+            padding: 1.5rem;
+        }
+
+        /* Строка расписания */
+        .lineup-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            padding: 1.25rem 1.75rem;
+            transition: var(--transition-base);
+        }
+
+        .lineup-row:hover {
+            border-color: var(--accent-cyan);
+            transform: translateX(6px);
+        }
+
+        /* Мини-схема зала */
+        .mini-hall-svg {
+            width: 100%;
+            max-width: 520px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .zone-poly {
+            cursor: pointer;
+            transition: var(--transition-fast);
+            stroke: rgba(255, 255, 255, 0.25);
+            stroke-width: 2;
+        }
+
+        .zone-poly:hover, .zone-poly.active {
+            stroke: var(--accent-lime);
+            stroke-width: 3;
+            filter: brightness(1.3);
+        }
+
+        /* Toast-уведомление */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--accent-lime);
+            color: var(--text-dark);
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 0.9rem 1.5rem;
+            border-radius: var(--radius-pill);
+            box-shadow: var(--glow-lime);
+            transform: translateY(150%);
+            transition: transform 0.3s var(--ease-out-expo);
+            z-index: 9999;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 960px) {
+            .ds-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .ds-sidebar {
+                position: static;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-default);
+            }
+            .type-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="ds-wrapper">
+    <!-- БОКОВАЯ НАВИГАЦИЯ -->
+    <aside class="ds-sidebar">
+        <div>
+            <div class="ds-brand">ЗВУК <span>//</span> СИНТЕЗ</div>
+            <div class="ds-version">DESIGN SYSTEM v2.6</div>
+
+            <div class="ds-nav-group">
+                <div class="ds-nav-label">01. Фундамент (Foundations)</div>
+                <ul class="ds-nav-list">
+                    <li><a href="#colors">Цветовая палитра</a></li>
+                    <li><a href="#typography">Типографика и шкала</a></li>
+                    <li><a href="#spacing">Отступы и скругления</a></li>
+                    <li><a href="#elevation">Тени, свечения и стекло</a></li>
+                </ul>
+            </div>
+
+            <div class="ds-nav-group">
+                <div class="ds-nav-label">02. Базовые элементы (Atoms)</div>
+                <ul class="ds-nav-list">
+                    <li><a href="#buttons">Кнопки и состояния</a></li>
+                    <li><a href="#badges">Теги и индикаторы</a></li>
+                    <li><a href="#forms">Поля ввода и контролы</a></li>
+                </ul>
+            </div>
+
+            <div class="ds-nav-group">
+                <div class="ds-nav-label">03. Паттерны фестиваля</div>
+                <ul class="ds-nav-list">
+                    <li><a href="#domain">Карточки, тайминг и зал</a></li>
+                    <li><a href="#tokens-export">Экспорт CSS-переменных</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+            Нажмите на любую карточку цвета или кнопку «Копировать», чтобы скопировать токен в буфер.
+        </div>
+    </aside>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <main class="ds-main">
+        <div class="ds-hero">
+            <span class="tag-pill tag-outline">UI-KIT & COMPONENT LIBRARY</span>
+            <h1>ДИЗАЙН-СИСТЕМА <br><span style="color: var(--accent-lime);">ЗВУК // СИНТЕЗ</span></h1>
+            <p>
+                Единый визуальный язык цифровых продуктов музыкального фестиваля и премии. Построен на контрасте глубокого обсидианового фона, кислотно-лаймовых акцентов, бруталистской типографики и модульных карточек.
+            </p>
+        </div>
+
+        <!-- =========================================================
+             РАЗДЕЛ 1: ЦВЕТОВАЯ ПАЛИТРА
+             ========================================================= -->
+        <section class="ds-section" id="colors">
+            <div class="ds-sec-header">
+                <div>
+                    <span class="ds-sec-num">01 // COLOR TOKENS</span>
+                    <h2 class="ds-sec-title">Цветовая палитра</h2>
+                </div>
+                <span style="color: var(--text-muted); font-size: 0.9rem;">Кликните на плашку для копирования HEX</span>
+            </div>
+
+            <h3 class="ds-sub-title">Фоновые поверхности (Surfaces)</h3>
+            <div class="color-grid">
+                <div class="color-card" onclick="copyText('#060608')">
+                    <div class="color-swatch" style="background: #060608;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Obsidian Void</div>
+                        <div class="color-meta"><span>--bg-main</span><span>#060608</span></div>
+                    </div>
+                </div>
+                <div class="color-card" onclick="copyText('#0D0D12')">
+                    <div class="color-swatch" style="background: #0D0D12;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Deep Surface</div>
+                        <div class="color-meta"><span>--bg-surface</span><span>#0D0D12</span></div>
+                    </div>
+                </div>
+                <div class="color-card" onclick="copyText('#101015')">
+                    <div class="color-swatch" style="background: #101015;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Card Base</div>
+                        <div class="color-meta"><span>--bg-card</span><span>#101015</span></div>
+                    </div>
+                </div>
+                <div class="color-card" onclick="copyText('#181822')">
+                    <div class="color-swatch" style="background: #181822;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Card Elevated</div>
+                        <div class="color-meta"><span>--bg-card-hover</span><span>#181822</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="ds-sub-title">Акцентные и семантические цвета (Accents)</h3>
+            <div class="color-grid">
+                <div class="color-card" onclick="copyText('#CCFF00')">
+                    <div class="color-swatch" style="background: #CCFF00;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Acid Lime (Primary)</div>
+                        <div class="color-meta"><span>--accent-lime</span><span>#CCFF00</span></div>
+                    </div>
+                </div>
+                <div class="color-card" onclick="copyText('#7B2CBF')">
+                    <div class="color-swatch" style="background: #7B2CBF;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Ultraviolet Stage</div>
+                        <div class="color-meta"><span>--accent-purple</span><span>#7B2CBF</span></div>
+                    </div>
+                </div>
+                <div class="color-card" onclick="copyText('#00F5D4')">
+                    <div class="color-swatch" style="background: #00F5D4;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Cyber Cyan (Fan-Zone)</div>
+                        <div class="color-meta"><span>--accent-cyan</span><span>#00F5D4</span></div>
+                    </div>
+                </div>
+                <div class="color-card" onclick="copyText('#FF6B6B')">
+                    <div class="color-swatch" style="background: #FF6B6B;"></div>
+                    <div class="color-info">
+                        <div class="color-name">Signal Coral (Alert/VIP)</div>
+                        <div class="color-meta"><span>--accent-coral</span><span>#FF6B6B</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             РАЗДЕЛ 2: ТИПОГРАФИКА
+             ========================================================= -->
+        <section class="ds-section" id="typography">
+            <div class="ds-sec-header">
+                <div>
+                    <span class="ds-sec-num">02 // TYPOGRAPHY SCALE</span>
+                    <h2 class="ds-sec-title">Типографическая шкала</h2>
+                </div>
+                <span style="color: var(--text-muted); font-size: 0.9rem;">Display: Unbounded · Body: Manrope</span>
+            </div>
+
+            <div class="showcase-box">
+                <div class="type-row">
+                    <div class="type-specs">
+                        <strong>Display Hero (H1)</strong>
+                        clamp(2.8rem, 7vw, 6.5rem)<br>Weight: 900 · Line-height: 1.02
+                    </div>
+                    <div style="font-family: var(--font-display); font-size: clamp(2.2rem, 4.5vw, 4rem); font-weight: 900; text-transform: uppercase; line-height: 1.02;">
+                        СИНТЕЗ ЗВУКА
+                    </div>
+                </div>
+
+                <div class="type-row">
+                    <div class="type-specs">
+                        <strong>Section Heading (H2)</strong>
+                        clamp(2rem, 4vw, 3.5rem)<br>Weight: 800 · Line-height: 1.08
+                    </div>
+                    <div style="font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.6rem); font-weight: 800; text-transform: uppercase;">
+                        НАГРАЖДЕНИЕ АРТИСТОВ
+                    </div>
+                </div>
+
+                <div class="type-row">
+                    <div class="type-specs">
+                        <strong>Card Title (H3)</strong>
+                        1.5rem (24px)<br>Weight: 700 · Line-height: 1.2
+                    </div>
+                    <div style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; text-transform: uppercase;">
+                        ЭФИР // МОДУЛЬ — LIVE SET
+                    </div>
+                </div>
+
+                <div class="type-row">
+                    <div class="type-specs">
+                        <strong>Body Lead</strong>
+                        1.2rem (19px)<br>Weight: 400 · Line-height: 1.55
+                    </div>
+                    <div style="font-size: 1.2rem; color: var(--text-muted);">
+                        Двухдневный аудиовизуальный фестиваль электронной и независимой сцены на берегу Финского залива.
+                    </div>
+                </div>
+
+                <div class="type-row">
+                    <div class="type-specs">
+                        <strong>Body Regular & Mono</strong>
+                        0.95rem (15px)<br>Weight: 400 / 600
+                    </div>
+                    <div>
+                        <p style="margin-bottom: 0.4rem;">Основной текст интерфейсов, описаний билетов и карточек участников премии.</p>
+                        <code style="font-family: var(--font-mono); color: var(--accent-lime); font-size: 0.85rem;">14.08.2026 // 21:30 MSK // ГЛАВНАЯ СЦЕНА</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             РАЗДЕЛ 3: СЕТКА, ОТСТУПЫ И СКРУГЛЕНИЯ
+             ========================================================= -->
+        <section class="ds-section" id="spacing">
+            <div class="ds-sec-header">
+                <div>
+                    <span class="ds-sec-num">03 // LAYOUT, SPACING & RADIUS</span>
+                    <h2 class="ds-sec-title">Отступы и геометрия</h2>
+                </div>
+            </div>
+
+            <div class="showcase-box">
+                <h3 class="ds-sub-title" style="margin-top: 0;">Шкала отступов (8pt Grid System)</h3>
+                <div class="spacing-list">
+                    <div class="spacing-item">
+                        <code style="font-family: var(--font-mono);">--space-xs</code>
+                        <span style="color: var(--text-muted);">8px (0.5rem)</span>
+                        <div class="spacing-bar" style="width: 32px;"></div>
+                    </div>
+                    <div class="spacing-item">
+                        <code style="font-family: var(--font-mono);">--space-sm</code>
+                        <span style="color: var(--text-muted);">16px (1rem)</span>
+                        <div class="spacing-bar" style="width: 64px;"></div>
+                    </div>
+                    <div class="spacing-item">
+                        <code style="font-family: var(--font-mono);">--space-md</code>
+                        <span style="color: var(--text-muted);">24px (1.5rem)</span>
+                        <div class="spacing-bar" style="width: 110px;"></div>
+                    </div>
+                    <div class="spacing-item">
+                        <code style="font-family: var(--font-mono);">--space-lg</code>
+                        <span style="color: var(--text-muted);">40px (2.5rem)</span>
+                        <div class="spacing-bar" style="width: 180px;"></div>
+                    </div>
+                    <div class="spacing-item">
+                        <code style="font-family: var(--font-mono);">--space-xl</code>
+                        <span style="color: var(--text-muted);">64px (4rem)</span>
+                        <div class="spacing-bar" style="width: 280px;"></div>
+                    </div>
+                </div>
+
+                <h3 class="ds-sub-title">Радиусы скругления (Border Radius)</h3>
+                <div class="radius-grid">
+                    <div class="radius-card" style="border-radius: var(--radius-sm);">
+                        <strong>--radius-sm</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">12px · Инпуты</span>
+                    </div>
+                    <div class="radius-card" style="border-radius: var(--radius-md);">
+                        <strong>--radius-md</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">18px · Строки</span>
+                    </div>
+                    <div class="radius-card" style="border-radius: var(--radius-lg);">
+                        <strong>--radius-lg</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">24px · Карточки</span>
+                    </div>
+                    <div class="radius-card" style="border-radius: var(--radius-pill);">
+                        <strong>--radius-pill</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">9999px · Кнопки</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             РАЗДЕЛ 4: ЭФФЕКТЫ, СВЕЧЕНИЯ И GLASSMORPHISM
+             ========================================================= -->
+        <section class="ds-section" id="elevation">
+            <div class="ds-sec-header">
+                <div>
+                    <span class="ds-sec-num">04 // ELEVATION & EFFECTS</span>
+                    <h2 class="ds-sec-title">Свечения и матовое стекло</h2>
+                </div>
+            </div>
+
+            <div class="domain-grid">
+                <div class="showcase-box" style="box-shadow: var(--glow-lime); border-color: var(--accent-lime);">
+                    <div class="tag-pill tag-lime" style="margin-bottom: 1rem;">ACTIVE GLOW</div>
+                    <h4 style="font-family: var(--font-display); margin-bottom: 0.5rem;">--glow-lime</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Используется для ключевых CTA-кнопок и выбранного сектора на схеме зала.</p>
+                </div>
+
+                <div class="showcase-box" style="background: linear-gradient(135deg, rgba(123,44,191,0.28), rgba(0,245,212,0.12)); backdrop-filter: blur(16px);">
+                    <div class="tag-pill tag-cyan" style="margin-bottom: 1rem;">GLASSMORPHISM</div>
+                    <h4 style="font-family: var(--font-display); margin-bottom: 0.5rem;">backdrop-filter: blur(16px)</h4>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Применяется в фиксированной шапке навигации, модальных окнах и бейджах поверх фото.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             РАЗДЕЛ 5: КНОПКИ И БЕЙДЖИ
+             ========================================================= -->
+        <section class="ds-section" id="buttons">
+            <div class="ds-sec-header">
+                <div>
+                    <span class="ds-sec-num">05 // BUTTONS & TAGS</span>
+                    <h2 class="ds-sec-title">Кнопки и индикаторы</h2>
+                </div>
+            </div>
+
+            <div class="showcase-box">
+                <h3 class="ds-sub-title" style="margin-top: 0;">Варианты кнопок (Variants & Sizes)</h3>
+                <div class="btn-row" style="margin-bottom: 1.5rem;">
+                    <button class="btn btn-primary" onclick="showToast('Клик по Primary CTA')">Купить билет</button>
+                    <button class="btn btn-secondary">VIP Бронь</button>
+                    <button class="btn btn-outline">Смотреть лайн-ап</button>
+                    <button class="btn btn-ghost">Голосовать</button>
+                    <button class="btn btn-primary" disabled>Sold Out</button>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary btn-sm">Small Primary</button>
+                    <button class="btn btn-outline btn-sm">Small Outline</button>
+                </div>
+
+                <div class="code-snippet">
+                    <span>&lt;button class="btn btn-primary"&gt;Купить билет&lt;/button&gt;</span>
+                    <button class="copy-btn" onclick="copyText('&lt;button class=&quot;btn btn-primary&quot;&gt;Купить билет&lt;/button&gt;')">Копировать HTML</button>
+                </div>
+            </div>
+
+            <div class="showcase-box" id="badges">
+                <h3 class="ds-sub-title" style="margin-top: 0;">Теги, бейджи номинаций и статусы</h3>
+                <div class="btn-row">
+                    <span class="tag-pill tag-lime">Прорыв года</span>
+                    <span class="tag-pill tag-outline">14—15 АВГУСТА 2026</span>
+                    <span class="tag-pill tag-purple">ГЛАВНАЯ СЦЕНА</span>
+                    <span class="tag-pill tag-cyan">FAST-TRACK ВХОД</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             РАЗДЕЛ 6: ПОЛЯ ВВОДА И КОНТРОЛЫ
+             ========================================================= -->
+        <section class="ds-section" id="forms">
+            <div class="ds-sec-header">
+                <div>
+                    <span class="ds-sec-num">06 // FORM CONTROLS</span>
+                    <h2 class="ds-sec-title">Формы и элементы управления</h2>
+                </div>
+            </div>
+
+            <div class="showcase-box">
+                <div class="form-grid">
+                    <div class="ui-field">
+                        <label>Стандартное поле (Default)</label>
+                        <input type="text" class="ui-input" placeholder="Александр Смирнов">
+                        <div class="field-hint">Укажите имя для именного электронного билета</div>
+                    </div>
+
+                    <div class="ui-field">
+                        <label>Поле с промокодом (Filled)</label>
+                        <input type="text" class="ui-input" value="SYNTHESIS2026" style="border-color: var(--accent-lime);">
+                        <div class="field-hint" style="color: var(--accent-lime);">Промокод применён: скидка 15%</div>
+                    </div>
+
+                    <div class="ui-field">
+                        <label>Состояние ошибки (Error)</label>
+                        <input type="email" class="ui-input error" value="alex@invalid">
+                        <div class="field-hint error">Введите корректный адрес электронной почты</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); display: flex; gap: 2.5rem; flex-wrap: wrap;">
+                    <label class="toggle-wrap">
+                        <input type="checkbox" checked hidden>
+                        <span class="ui-switch"></span>
+                        <span>Напомнить о начале церемонии по SMS</span>
+                    </label>
+
+                    <label class="toggle-wrap">
+                        <input type="checkbox" hidden>
+                        <span class="ui-switch"></span>
+                        <span>Добавить страховку возврата билета (+350 ₽)</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             РАЗДЕЛ 7: ДОМЕННЫЕ КОМПОНЕНТЫ ФЕСТИВАЛЯ
+             ========================================================= -->
+        <section class="ds-section" id="domain">
+            <div class="ds-sec-header">
+                <div>
+                    <span class="ds-sec-num">07 // DOMAIN COMPONENTS</span>
+                    <h2 class="ds-sec-title">Компоненты фестиваля</h2>
+                </div>
+            </div>
+
+            <div class="domain-grid">
+                <!-- Компонент 1: Карточка номинанта премии -->
+                <div class="artist-card">
+                    <div class="artist-cover">
+                        <div><span class="tag-pill tag-lime">Лучшее лайв-шоу</span></div>
+                        <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-cyan);">НОМИНАНТ №02</div>
+                    </div>
+                    <div class="artist-body">
+                        <h3 style="font-family: var(--font-display); font-size: 1.35rem; margin-bottom: 0.5rem;">СЕВЕРНЫЙ ВЕТЕР</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">
+                            Аудиовизуальный перформанс на стыке пост-панка и генеративной лазерной графики.
+                        </p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">Голосов: <strong id="demoVote" style="color: #fff;">2 185</strong></span>
+                            <button class="btn btn-outline btn-sm" onclick="demoVoteClick(this)">Голосовать</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Компонент 2: Интерактивный мини-виджет схемы зала -->
+                <div class="showcase-box" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span class="tag-pill tag-cyan">СХЕМА ЗАЛА (SVG)</span>
+                            <span id="demoZoneStatus" style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent-lime);">Выбрано: ФАН-ЗОНА</span>
+                        </div>
+                        <svg class="mini-hall-svg" viewBox="0 0 400 240" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="70" y="12" width="260" height="32" rx="8" fill="#CCFF00"/>
+                            <text x="200" y="32" text-anchor="middle" fill="#060608" font-family="sans-serif" font-weight="900" font-size="11">ГЛАВНАЯ СЦЕНА</text>
+
+                            <path id="z-fan" class="zone-poly active" d="M60,55 L340,55 L325,105 L75,105 Z" fill="rgba(0,245,212,0.22)" onclick="selectDemoZone('ФАН-ЗОНА — 5 500 ₽', 'z-fan')"/>
+                            <text x="200" y="84" text-anchor="middle" fill="#fff" font-family="sans-serif" font-weight="700" font-size="11" pointer-events="none">ФАН-ЗОНА</text>
+
+                            <path id="z-dance" class="zone-poly" d="M75,115 L325,115 L305,180 L95,180 Z" fill="rgba(123,44,191,0.28)" onclick="selectDemoZone('ТАНЦПОЛ — 3 500 ₽', 'z-dance')"/>
+                            <text x="200" y="152" text-anchor="middle" fill="#fff" font-family="sans-serif" font-weight="700" font-size="12" pointer-events="none">ТАНЦПОЛ</text>
+
+                            <rect id="z-balcony" class="zone-poly" x="85" y="190" width="230" height="36" rx="8" fill="rgba(255,107,107,0.22)" onclick="selectDemoZone('БАЛКОН VIP — 7 200 ₽', 'z-balcony')"/>
+                            <text x="200" y="212" text-anchor="middle" fill="#fff" font-family="sans-serif" font-weight="700" font-size="10" pointer-events="none">ПАНОРАМНЫЙ БАЛКОН</text>
+                        </svg>
+                    </div>
+                    <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.75rem;">
+                        Кликните по любому сектору SVG-схемы для проверки интерактивного состояния.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Компонент 3: Строка расписания -->
+            <h3 class="ds-sub-title">Элемент расписания выступлений (Line-up Row)</h3>
+            <div class="lineup-row">
+                <div style="font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; color: var(--accent-lime);">20:00</div>
+                <div>
+                    <div style="font-family: var(--font-display); font-size: 1.15rem; font-weight: 700;">ЦЕРЕМОНИЯ ПРЕМИИ «СИНТЕЗ AWARDS»</div>
+                    <div style="font-size: 0.88rem; color: var(--text-muted);">Вручение статуэток победителям в 8 номинациях · Прямой эфир</div>
+                </div>
+                <span class="tag-pill tag-purple">ГЛАВНАЯ СЦЕНА</span>
+                <button class="btn btn-primary btn-sm" onclick="showToast('Переход к выбору билетов')">Билеты</button>
+            </div>
+        </section>
+
+        <!-- =========================================================
+             РАЗДЕЛ 8: ЭКСПОРТ CSS-ТОКЕНОВ
+             ========================================================= -->
+        <section class="ds-section" id="tokens-export">
+            <div class="ds-sec-header">
+                <div>
+                    <span class="ds-sec-num">08 // CSS VARIABLES EXPORT</span>
+                    <h2 class="ds-sec-title">Готовые токены для подключения</h2>
+                </div>
+            </div>
+
+            <div class="showcase-box">
+                <pre id="cssTokensBlock" style="font-family: var(--font-mono); font-size: 0.82rem; color: #C3E88D; overflow-x: auto; line-height: 1.6;">:root {
+  --bg-main: #060608;
+  --bg-surface: #0D0D12;
+  --bg-card: #101015;
+  --bg-card-hover: #181822;
+  --accent-lime: #CCFF00;
+  --accent-purple: #7B2CBF;
+  --accent-cyan: #00F5D4;
+  --accent-coral: #FF6B6B;
+  --text-main: #F4F4F6;
+  --text-muted: #8E8E9E;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+}</pre>
+                <div style="margin-top: 1.25rem;">
+                    <button class="btn btn-primary btn-sm" onclick="copyTokensBlock()">Скопировать все CSS-токены</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Всплывающее уведомление -->
+<div class="toast" id="toast">Скопировано в буфер обмена</div>
+
+<script>
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function copyText(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('Скопировано: ' + text);
+        });
+    }
+
+    function copyTokensBlock() {
+        const code = document.getElementById('cssTokensBlock').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            showToast('CSS-токены скопированы в буфер обмена');
+        });
+    }
+
+    function demoVoteClick(btn) {
+        const el = document.getElementById('demoVote');
+        if (btn.dataset.voted) return;
+        btn.dataset.voted = 'true';
+        el.innerText = '2 186';
+        btn.innerText = 'Голос учтён ✓';
+        btn.style.background = 'var(--accent-lime)';
+        btn.style.color = '#060608';
+        showToast('Голос за номинанта учтён');
+    }
+
+    function selectDemoZone(label, id) {
+        document.querySelectorAll('.zone-poly').forEach(z => z.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('demoZoneStatus').innerText = 'Выбрано: ' + label;
+    }
+</script>
+</body>
+</html>
